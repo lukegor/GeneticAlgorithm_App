@@ -1,4 +1,4 @@
-# JSharp
+# GeneticAlgorithm_App
 
 ## Technologies
 [<img align="left" alt="Csharp" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" style="padding-right:10px;"/>][csharp]
