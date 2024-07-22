@@ -32,7 +32,7 @@ namespace GeneticAlgorithm_App
             int b = _settings.UpperBound;
             float d = _settings.PrecisionIndicator;
             int prec = GeneticAlgorithmParams.GetPrecInNumber(d);
-            int l = Generation.GetLValue(a, b, d);
+            int l = GenerationCycle.GetLValue(a, b, d);
             bool isElite = _settings.IsElite;
 
             var totalCases = nLoop.Count * pkLoop.Count * pmLoop.Count * tLoop.Count;

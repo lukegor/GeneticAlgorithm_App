@@ -11,7 +11,7 @@ namespace GeneticAlgorithm_App
         internal (double minFxVal, double maxFxVal, double avgFxVal, double[] lastXreals, int maxIndex, double EliteXreal) ProcessGeneration(
             int a, int b, int l, int n, float d, float p_k, float p_m, int prec, double[] lastXreals, bool isElite)
         {
-            Generation gen = new Generation();
+            GenerationCycle gen = new GenerationCycle();
 
             // Early Steps
             double[] xrealArray = lastXreals == null

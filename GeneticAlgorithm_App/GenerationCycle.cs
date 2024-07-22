@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm_App
 {
-    internal class Generation
+    internal class GenerationCycle
     {
         public static int GetLValue(int a, int b, float d) =>
             (int)Math.Ceiling(Math.Log2(((b - a) / d) + 1));

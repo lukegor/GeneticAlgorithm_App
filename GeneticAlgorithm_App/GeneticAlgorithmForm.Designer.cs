@@ -32,9 +32,9 @@ namespace GeneticAlgorithm_App
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series = new System.Windows.Forms.DataVisualization.Charting.Series();
             dgvStatistics = new DataGridView();
             lp = new DataGridViewTextBoxColumn();
             x_real = new DataGridViewTextBoxColumn();
@@ -77,7 +77,7 @@ namespace GeneticAlgorithm_App
             Column3 = new DataGridViewTextBoxColumn();
             Column4 = new DataGridViewTextBoxColumn();
             Column5 = new DataGridViewTextBoxColumn();
-            dgbSimulationTopResults = new DataGridView();
+            dgvSimulationTopResults = new DataGridView();
             Column6 = new DataGridViewTextBoxColumn();
             Column7 = new DataGridViewTextBoxColumn();
             Column8 = new DataGridViewTextBoxColumn();
@@ -91,7 +91,7 @@ namespace GeneticAlgorithm_App
             ((System.ComponentModel.ISupportInitialize)dgvStatistics).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvShares).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgbSimulationTopResults).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSimulationTopResults).BeginInit();
             mainTab.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -342,16 +342,16 @@ namespace GeneticAlgorithm_App
             // 
             // chart
             // 
-            chartArea1.Name = "ChartArea1";
-            chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart.Legends.Add(legend1);
+            chartArea.Name = "ChartArea1";
+            chart.ChartAreas.Add(chartArea);
+            legend.Name = "Legend1";
+            chart.Legends.Add(legend);
             chart.Location = new Point(0, 10);
             chart.Name = "chart";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart.Series.Add(series1);
+            series.ChartArea = "ChartArea1";
+            series.Legend = "Legend1";
+            series.Name = "Series1";
+            chart.Series.Add(series);
             chart.Size = new Size(1652, 316);
             chart.TabIndex = 21;
             chart.Text = "chart";
@@ -392,14 +392,14 @@ namespace GeneticAlgorithm_App
             Column5.Name = "Column5";
             Column5.Width = 50;
             // 
-            // dgbSimulationTopResults
+            // dgvSimulationTopResults
             // 
-            dgbSimulationTopResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgbSimulationTopResults.Columns.AddRange(new DataGridViewColumn[] { Column6, Column7, Column8, Column9, Column10, Column11 });
-            dgbSimulationTopResults.Location = new Point(963, 448);
-            dgbSimulationTopResults.Name = "dgbSimulationTopResults";
-            dgbSimulationTopResults.Size = new Size(711, 194);
-            dgbSimulationTopResults.TabIndex = 23;
+            dgvSimulationTopResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSimulationTopResults.Columns.AddRange(new DataGridViewColumn[] { Column6, Column7, Column8, Column9, Column10, Column11 });
+            dgvSimulationTopResults.Location = new Point(963, 448);
+            dgvSimulationTopResults.Name = "dgvSimulationTopResults";
+            dgvSimulationTopResults.Size = new Size(711, 194);
+            dgvSimulationTopResults.TabIndex = 23;
             // 
             // Column6
             // 
@@ -480,7 +480,7 @@ namespace GeneticAlgorithm_App
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1690, 654);
             Controls.Add(btnSimulation);
-            Controls.Add(dgbSimulationTopResults);
+            Controls.Add(dgvSimulationTopResults);
             Controls.Add(dgvShares);
             Controls.Add(chbIsElite);
             Controls.Add(label8);
@@ -506,7 +506,7 @@ namespace GeneticAlgorithm_App
             ((System.ComponentModel.ISupportInitialize)dgvStatistics).EndInit();
             ((System.ComponentModel.ISupportInitialize)chart).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvShares).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgbSimulationTopResults).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSimulationTopResults).EndInit();
             mainTab.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
@@ -553,13 +553,12 @@ namespace GeneticAlgorithm_App
         private CheckBox chbIsElite;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
         private DataGridView dgvShares;
-        private DataGridView dgbSimulationTopResults;
+        private DataGridView dgvSimulationTopResults;
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Column2;
         private DataGridViewTextBoxColumn Column3;
         private DataGridViewTextBoxColumn Column4;
         private DataGridViewTextBoxColumn Column5;
-        private Button button2;
         private DataGridViewTextBoxColumn Column6;
         private DataGridViewTextBoxColumn Column7;
         private DataGridViewTextBoxColumn Column8;

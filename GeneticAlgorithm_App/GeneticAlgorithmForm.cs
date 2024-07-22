@@ -21,7 +21,7 @@ namespace GeneticAlgorithm_App
 {
     public partial class GeneticAlgorithmForm : Form
     {
-        private GeneticAlgorithmProcessor _processor = new GeneticAlgorithmProcessor();
+        private readonly GeneticAlgorithmProcessor _processor = new GeneticAlgorithmProcessor();
 
         public GeneticAlgorithmForm()
         {
@@ -82,40 +82,18 @@ namespace GeneticAlgorithm_App
             var settings = GetCurrentAlgorithmParams();
 
             int prec = GeneticAlgorithmParams.GetPrecInNumber(settings.PrecisionIndicator);
-            int l = Generation.GetLValue(settings.LowerBound, settings.UpperBound, settings.PrecisionIndicator);
+            int l = GenerationCycle.GetLValue(settings.LowerBound, settings.UpperBound, settings.PrecisionIndicator);
 
-            int n = settings.PopulationSize;
-            int T = settings.Generations;
-            int a = settings.LowerBound;
-            int b = settings.UpperBound;
             #endregion
 
-            double[] lastXreals = new double[n];
-            double[] minFxByGeneration = new double[T], maxFxByGeneration = new double[T], avgFxByGeneration = new double[T];
-            (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration) = _processor.RunGeneticAlgorithm(settings, l, prec);
+            var (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration) = _processor.RunGeneticAlgorithm(settings, l, prec);
 
             chart.Series.Clear();
             ChartVisualizer.ConfigureChartAppearance(chart);
             ChartVisualizer.PopulateChart(chart, settings.Generations, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
 
             var shareData = ShareCalculator.CalculateShares(settings.LowerBound, settings.UpperBound, l, lastXreals);
-            DisplayShares(shareData);
-        }
-
-        private void DisplayShares(List<ShareData> shareData)
-        {
-            dgvShares.Rows.Clear();
-
-            foreach (var data in shareData.Select((value, index) => new { value, index }))
-            {
-                dgvShares.Rows.Add(
-                    data.index + 1,
-                    data.value.XReal,
-                    data.value.XBin,
-                    data.value.FxValue,
-                    data.value.Percentage
-                );
-            }
+            DgvWriter.DisplaySharesDgv(dgvShares, shareData);
         }
 
         private void BtnSimulation_Click(object sender, EventArgs e)
@@ -124,15 +102,8 @@ namespace GeneticAlgorithm_App
             var simulationRunner = new SimulationRunner(settings, _processor);
             var simulationResults = simulationRunner.RunSimulations();
 
-            PopulateTopResults(simulationResults);
-        }
-
-        private void PopulateTopResults(List<(int, double, double, int, double)> sortedTestResults)
-        {
-            for (int i = 0; i < 50 && i < sortedTestResults.Count; ++i)
-            {
-                dgbSimulationTopResults.Rows.Add(i + 1, sortedTestResults[i].Item1, sortedTestResults[i].Item2, sortedTestResults[i].Item3, sortedTestResults[i].Item4, sortedTestResults[i].Item5);
-            }
+            int limit = 50;
+            DgvWriter.PopulateTopResultsDgv(dgvSimulationTopResults, simulationResults, limit);
         }
     }
 }

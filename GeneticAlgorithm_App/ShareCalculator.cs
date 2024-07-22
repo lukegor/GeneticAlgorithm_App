@@ -28,7 +28,7 @@ namespace GeneticAlgorithm_App
             {
                 XReal = group.XReal,
                 XBin = ConversionHelper.XIntToXBin(ConversionHelper.XRealToXInt(a, b, group.XReal, l), l),
-                FxValue = Generation.CountFxValue(group.XReal),
+                FxValue = GenerationCycle.CountFxValue(group.XReal),
                 Percentage = group.Percentage
             }).ToList();
         }
