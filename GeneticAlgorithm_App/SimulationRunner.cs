@@ -61,8 +61,10 @@ namespace GeneticAlgorithm_App
                     double[] minFxByGeneration = new double[t];
                     double[] avgFxByGeneration = new double[t];
 
+                    var settings = new GeneticAlgorithmParams(a, b, n, d, (float)pk, (float)pm, t, isElite);
+
                     (minFxByGeneration, maxFxByGeneration, avgFxByGeneration, lastXreals) =
-                        _processor.RunGenerations(a, b, l, n, t, d, (float)pk, (float)pm, prec, isElite);
+                        _processor.RunGeneticAlgorithm(settings, l, prec);
 
                     if (maxFxByGeneration.Max() > max)
                     {

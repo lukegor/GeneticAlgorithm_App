@@ -63,27 +63,21 @@ namespace GeneticAlgorithm_App
             return (min, max, avg, finalXRealArray, maxIndex, finalXRealArray[maxIndex]);
         }
 
-        public (double[], double[], double[], double[]) RunGenerations(
-        int a, int b, int l, int n, int T, float d, float p_k, float p_m, int prec, bool isElite)
+        public (double[], double[], double[], double[]) RunGeneticAlgorithm(GeneticAlgorithmParams settings, int l, int prec)
         {
+            int n = settings.PopulationSize, T = settings.Generations;
+
             double[] lastXreals = new double[n];
             double[] minFxByGeneration = new double[T], maxFxByGeneration = new double[T], avgFxByGeneration = new double[T];
 
             for (int counter = 0; counter < T; counter++)
             {
                 (minFxByGeneration[counter], maxFxByGeneration[counter], avgFxByGeneration[counter], lastXreals, _, _) =
-                    ProcessGeneration(a, b, l, n, d, p_k, p_m, prec, counter == 0 ? null : lastXreals, isElite);
+                    ProcessGeneration(settings.LowerBound, settings.UpperBound, l, n, settings.PrecisionIndicator,
+                                        settings.CrossoverProbability, settings.MutationProbability, prec, counter == 0 ? null : lastXreals, settings.IsElite);
             }
 
             return (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
-        }
-
-        public (double[], double[], double[], double[]) RunGeneticAlgorithm(
-        GeneticAlgorithmParams settings, int l, int prec)
-        {
-            return RunGenerations(
-                settings.LowerBound, settings.UpperBound, l, settings.PopulationSize, settings.Generations,
-                settings.PrecisionIndicator, settings.CrossoverProbability, settings.MutationProbability, prec, settings.IsElite);
         }
     }
 }
