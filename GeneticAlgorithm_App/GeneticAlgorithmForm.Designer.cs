@@ -471,7 +471,7 @@ namespace GeneticAlgorithm_App
             tabPage2.Padding = new Padding(3);
             tabPage2.Size = new Size(1658, 332);
             tabPage2.TabIndex = 2;
-            tabPage2.Text = "Global Chart";
+            tabPage2.Text = "Generational Chart";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // GeneticAlgorithmForm

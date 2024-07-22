@@ -9,6 +9,9 @@ namespace GeneticAlgorithm_App
 {
     internal class Generation
     {
+        public static int GetLValue(int a, int b, float d) =>
+            (int)Math.Ceiling(Math.Log2(((b - a) / d) + 1));
+
         public double[] FillArray(int n, Func<int, double> valueGenerator)
         {
             double[] result = new double[n];

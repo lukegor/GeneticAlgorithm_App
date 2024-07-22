@@ -15,7 +15,7 @@ GeneticAlgorithm_App is a Windows Forms application designed to demonstrate and 
 
 ## User Interface
 
-![ui](https://github.com/user-attachments/assets/67e8add7-bfb5-49f4-8945-c1f9b3ea4093)
+![ui](https://github.com/user-attachments/assets/7b166b28-a7fb-4cbf-90ce-3aa5e7eedf0b)
 
 
 ## License

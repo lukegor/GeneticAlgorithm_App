@@ -37,9 +37,6 @@ namespace GeneticAlgorithm_App
             this.chbIsElite.Checked = true;
         }
 
-        public int GetLValue(int a, int b, float d) =>
-            (int)Math.Ceiling(Math.Log2(((b - a) / d) + 1));
-
         public static int GetPrecInNumber(float d)
         {
             return d switch
@@ -118,20 +115,19 @@ namespace GeneticAlgorithm_App
             return (min, max, avg, finalXRealArray, maxIndex, finalXRealArray[maxIndex]);
         }
 
-        private void ConfigureChartAppearance(Chart chart)
+        private (double[], double[], double[], double[]) RunGeneticAlgorithm(int a, int b, int l, int n, int T, float d, float p_k, float p_m, int prec, double[] lastXreals, double[] minFxByGeneration, double[] maxFxByGeneration, double[] avgFxByGeneration)
         {
-            var chartArea = chart.ChartAreas[0];
-            chartArea.AxisX.IsStartedFromZero = false;
-            chartArea.AxisY.IsStartedFromZero = false;
+            bool isElite = chbIsElite.Checked;
 
-            chartArea.AxisY.Interval = 1;
-            chartArea.AxisX.Interval = 20;
+            for (int counter = 0; counter < T; counter++)
+            {
+                //this.dgvStatistics.Rows?.Clear();
+                (minFxByGeneration[counter], maxFxByGeneration[counter], avgFxByGeneration[counter], lastXreals, _, _) =
+                    ProcessGeneration(a, b, l, n, d, p_k, p_m, prec, counter == 0 ? null : lastXreals, isElite);
+            }
 
-            chartArea.AxisY.Minimum = -2;
-            chartArea.AxisY.Maximum = 2;
-
-            chartArea.AxisX.Title = "pokolenie (T)";
-            chartArea.AxisY.Title = "wartoœæ fx";
+            maxDoubles = maxFxByGeneration.ToList();
+            return (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
         }
 
         public List<double> maxDoubles = new List<double>();
@@ -148,7 +144,7 @@ namespace GeneticAlgorithm_App
             AssignInputValues(out a, out b, out n, out d, out p_k, out p_m, out T);
 
             int prec = GetPrecInNumber(d);
-            l = GetLValue(a, b, d);
+            l = Generation.GetLValue(a, b, d);
 
             #endregion
 
@@ -193,19 +189,100 @@ namespace GeneticAlgorithm_App
             }
         }
 
-        private (double[], double[], double[], double[]) RunGeneticAlgorithm(int a, int b, int l, int n, int T, float d, float p_k, float p_m, int prec, double[] lastXreals, double[] minFxByGeneration, double[] maxFxByGeneration, double[] avgFxByGeneration)
+        private void BtnSimulation_Click(object sender, EventArgs e)
         {
+            List<int> nLoop = new List<int> { 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 };
+            List<double> pkLoop = new List<double> { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9 };
+            List<double> pmLoop = new List<double> { 0.0001, 0.0005, 0.001, 0.005, 0.01 };
+            List<int> tLoop = new List<int> { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
+
+            ConcurrentBag<(int, double, double, int, double)> testResults = new ConcurrentBag<(int, double, double, int, double)>();
+
+            int a, b, l;
+            float d;
+            AssignInputValues(out a, out b, out _, out d, out _, out _, out _);
+            int prec = GetPrecInNumber(d);
+            l = Generation.GetLValue(a, b, d);
             bool isElite = chbIsElite.Checked;
 
-            for (int counter = 0; counter < T; counter++)
-            {
-                //this.dgvStatistics.Rows?.Clear();
-                (minFxByGeneration[counter], maxFxByGeneration[counter], avgFxByGeneration[counter], lastXreals, _, _) =
-                    ProcessGeneration(a, b, l, n, d, p_k, p_m, prec, counter == 0 ? null : lastXreals, isElite);
-            }
+            var totalCases = nLoop.Count * pkLoop.Count * pmLoop.Count * tLoop.Count;
+            var processedCases = 0;
 
-            maxDoubles = maxFxByGeneration.ToList();
-            return (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
+            var allCases = from n in nLoop
+                           from pk in pkLoop
+                           from pm in pmLoop
+                           from t in tLoop
+                           select new { n, pk, pm, t };
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            Parallel.ForEach(allCases, caseParams =>
+            {
+                var (n, pk, pm, t) = (caseParams.n, caseParams.pk, caseParams.pm, caseParams.t);
+                List<double> allMaxFx = new List<double>();
+
+                double max = -1.9999;
+
+                for (int rep = 0; rep < 100; ++rep)
+                {
+                    double[] lastXreals = new double[n];
+                    double[] maxFxByGeneration = new double[t];
+                    double[] minFxByGeneration = new double[t];
+                    double[] avgFxByGeneration = new double[t];
+
+                    for (int counter = 0; counter < t; counter++)
+                    {
+
+
+                        //this.dgvStatistics.Rows?.Clear();
+                        (minFxByGeneration[counter], maxFxByGeneration[counter], avgFxByGeneration[counter], lastXreals, _, _) =
+                            ProcessGeneration(a, b, l, n, d, (float)pk, (float)pm, prec, counter == 0 ? null : lastXreals, isElite);
+
+                        if(maxFxByGeneration.Max() > max)
+                        {
+                            max = maxFxByGeneration.Max();
+                            allMaxFx.Add(max);
+                        }
+                    }
+                }
+
+                double averageFx = allMaxFx.Average();
+                testResults.Add((n, pk, pm, t, averageFx));
+
+                // Increment processed cases and update progress counter
+                Interlocked.Increment(ref processedCases);
+                System.Diagnostics.Debug.WriteLine($"Progress: {processedCases}/{totalCases}");
+            });
+
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+
+            System.Diagnostics.Debug.WriteLine($"Execution time: {ts.Hours} hours, {ts.Minutes} minutes, {ts.Seconds} seconds");
+
+            var sortedTestResults = testResults.OrderByDescending(t => t.Item5).ThenBy(t => t.Item3).ToList();
+
+            for (int i = 0; i < 50 && i < sortedTestResults.Count; ++i)
+            {
+                dgbSimulationTopResults.Rows.Add(i + 1, sortedTestResults[i].Item1,sortedTestResults[i].Item2, sortedTestResults[i].Item3, sortedTestResults[i].Item4, sortedTestResults[i].Item5);
+            }
+        }
+
+        #region chart
+        private void ConfigureChartAppearance(Chart chart)
+        {
+            var chartArea = chart.ChartAreas[0];
+            chartArea.AxisX.IsStartedFromZero = false;
+            chartArea.AxisY.IsStartedFromZero = false;
+
+            chartArea.AxisY.Interval = 1;
+            chartArea.AxisX.Interval = 10;
+
+            chartArea.AxisY.Minimum = -2;
+            chartArea.AxisY.Maximum = 2;
+
+            chartArea.AxisX.Title = "pokolenie (T)";
+            chartArea.AxisY.Title = "wartoœæ fx";
         }
 
         private void PopulateChart(int T, double[] minFxByGeneration, double[] maxFxByGeneration, double[] avgFxByGeneration)
@@ -216,6 +293,7 @@ namespace GeneticAlgorithm_App
                 series.Name = name;
                 series.ChartType = SeriesChartType.Line;
                 series.Color = color;
+                series.BorderWidth = 3;
             }
 
             // Create and configure series
@@ -241,61 +319,6 @@ namespace GeneticAlgorithm_App
             chart.Series.Add(seriesMax);
             chart.Series.Add(seriesAvg);
         }
-
-        private void BtnSimulation_Click(object sender, EventArgs e)
-        {
-            List<int> nLoop = new List<int> { 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 };
-            List<double> pkLoop = new List<double> { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9 };
-            List<double> pmLoop = new List<double> { 0.0001, 0.0005, 0.001, 0.005, 0.01 };
-            List<int> tLoop = new List<int> { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
-
-            ConcurrentBag<(int, double, double, int, double)> testResults = new ConcurrentBag<(int, double, double, int, double)>();
-
-            int a, b, l;
-            float d;
-            AssignInputValues(out a, out b, out _, out d, out _, out _, out _);
-            int prec = GetPrecInNumber(d);
-            l = GetLValue(a, b, d);
-
-            var totalCases = nLoop.Count * pkLoop.Count * pmLoop.Count * tLoop.Count;
-            var processedCases = 0;
-
-            var allCases = from n in nLoop
-                           from pk in pkLoop
-                           from pm in pmLoop
-                           from t in tLoop
-                           select new { n, pk, pm, t };
-
-            Parallel.ForEach(allCases, caseParams =>
-            {
-                var (n, pk, pm, t) = (caseParams.n, caseParams.pk, caseParams.pm, caseParams.t);
-                List<double> allAvgMaxFx = new List<double>();
-
-                for (int rep = 0; rep < 100; ++rep)
-                {
-                    double[] population = new double[n];
-                    double[] generations = new double[t];
-                    double[] maxFxByGeneration = new double[t];
-                    double[] temp = new double[t];
-                    (_, generations, maxFxByGeneration, temp) = RunGeneticAlgorithm(a, b, l, n, t, d, (float)pk, (float)pm, prec, population, generations, maxFxByGeneration, temp);
-
-                    allAvgMaxFx.Add(maxFxByGeneration.Average());
-                }
-
-                double averageFx = allAvgMaxFx.Average();
-                testResults.Add((n, pk, pm, t, averageFx));
-
-                // Increment processed cases and update progress counter
-                Interlocked.Increment(ref processedCases);
-                System.Diagnostics.Debug.WriteLine($"Progress: {processedCases}/{totalCases}");
-            });
-
-            var sortedTestResults = testResults.OrderByDescending(t => t.Item5).ThenBy(t => t.Item3).ToList();
-
-            for (int i = 0; i < 50 && i < sortedTestResults.Count; ++i)
-            {
-                dgbSimulationTopResults.Rows.Add(i + 1, sortedTestResults[i].Item1, sortedTestResults[i].Item2, sortedTestResults[i].Item3, sortedTestResults[i].Item4, sortedTestResults[i].Item5);
-            }
-        }
+        #endregion
     }
 }
