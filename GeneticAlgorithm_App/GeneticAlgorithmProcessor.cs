@@ -6,8 +6,25 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm_App
 {
+    /// <summary>
+    /// Processes and runs the genetic algorithm.
+    /// </summary>
     internal class GeneticAlgorithmProcessor
     {
+        /// <summary>
+        /// Processes a single generation of the genetic algorithm.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="l"></param>
+        /// <param name="n"></param>
+        /// <param name="d"></param>
+        /// <param name="p_k"></param>
+        /// <param name="p_m"></param>
+        /// <param name="prec"></param>
+        /// <param name="lastXreals"></param>
+        /// <param name="isElite"></param>
+        /// <returns>A tuple containing the minimum, maximum, and average fitness values, the last generation of x real values, the index of the maximum fitness value, and the elite x real value.</returns>
         internal (double minFxVal, double maxFxVal, double avgFxVal, double[] lastXreals, int maxIndex, double EliteXreal) ProcessGeneration(
             int a, int b, int l, int n, float d, float p_k, float p_m, int prec, double[] lastXreals, bool isElite)
         {
@@ -16,7 +33,7 @@ namespace GeneticAlgorithm_App
             // Early Steps
             double[] xrealArray = lastXreals == null
                 ? gen.FillFirstTwoColumnsAndXrealArray(a, b, n, prec)
-                : gen.FillFirstTwoColumnsAndXrealArray(prec, lastXreals);
+                : gen.RoundXrealArray(prec, lastXreals);
 
             double[] fxValuesArray = gen.FillFxColumnAndFxValuesArray(xrealArray);
 
@@ -63,6 +80,13 @@ namespace GeneticAlgorithm_App
             return (min, max, avg, finalXRealArray, maxIndex, finalXRealArray[maxIndex]);
         }
 
+        /// <summary>
+        /// Runs the genetic algorithm for a specified number of generations.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="l"></param>
+        /// <param name="prec"></param>
+        /// <returns>A tuple containing the last generation of x real values, and arrays of minimum, maximum, and average fitness values by generation.</returns>
         public (double[], double[], double[], double[]) RunGeneticAlgorithm(GeneticAlgorithmParams settings, int l, int prec)
         {
             int n = settings.PopulationSize, T = settings.Generations;

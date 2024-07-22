@@ -19,6 +19,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 namespace GeneticAlgorithm_App
 {
+    /// <summary>
+    /// Main form for the Genetic Algorithm application.
+    /// </summary>
     public partial class GeneticAlgorithmForm : Form
     {
         private readonly GeneticAlgorithmProcessor _processor = new GeneticAlgorithmProcessor();
@@ -29,6 +32,9 @@ namespace GeneticAlgorithm_App
             SetDefaultValues();
         }
 
+        /// <summary>
+        /// Sets the default values for the form controls.
+        /// </summary>
         private void SetDefaultValues()
         {
             this.txtLowerBound.Text = "-4";
@@ -58,6 +64,10 @@ namespace GeneticAlgorithm_App
         public int Generations => int.Parse(txtNoGenerations.Text);
         public bool IsElite => chbIsElite.Checked;
 
+        /// <summary>
+        /// Retrieves the current algorithm parameters from the form.
+        /// </summary>
+        /// <returns>The current <see cref="GeneticAlgorithmParams"/>.</returns>
         private GeneticAlgorithmParams GetCurrentAlgorithmParams()
         {
             return new GeneticAlgorithmParams
@@ -73,6 +83,11 @@ namespace GeneticAlgorithm_App
             };
         }
 
+        /// <summary>
+        /// Handles the click event of the Calculate button, running the genetic algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnCalculate_Click(object sender, EventArgs e)
         {
             #region Preparations
@@ -96,6 +111,9 @@ namespace GeneticAlgorithm_App
             DgvWriter.DisplaySharesDgv(dgvShares, shareData);
         }
 
+        /// <summary>
+        /// Handles the click event of the Simulation button, running simulations.
+        /// </summary>
         private void BtnSimulation_Click(object sender, EventArgs e)
         {
             var settings = GetCurrentAlgorithmParams();

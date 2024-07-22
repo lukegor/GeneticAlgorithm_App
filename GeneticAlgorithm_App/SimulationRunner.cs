@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithm_App
 {
+    /// <summary>
+    /// Runs simulations of the genetic algorithm with various parameters.
+    /// </summary>
     internal class SimulationRunner
     {
         private readonly GeneticAlgorithmParams _settings;
@@ -19,6 +22,10 @@ namespace GeneticAlgorithm_App
             _processor = processor;
         }
 
+        /// <summary>
+        /// Runs simulations of the genetic algorithm over a range of parameter values.
+        /// </summary>
+        /// <returns>A list of tuples containing the population size, crossover probability, mutation probability, number of generations, and average maximum fitness value for each of the best individuals in each run of the algorithm for different parameters.</returns>
         internal List<(int, double, double, int, double)> RunSimulations()
         {
             List<int> nLoop = new List<int> { 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 };

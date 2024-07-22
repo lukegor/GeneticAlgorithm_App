@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,19 @@ namespace GeneticAlgorithm_App
 {
     internal class GeneticAlgorithmParams
     {
+        [Description("a")]
         public int LowerBound { get; set; }
+        [Description("b")]
         public int UpperBound { get; set; }
+        [Description("n")]
         public int PopulationSize { get; set; }
+        [Description("d")]
         public float PrecisionIndicator { get; set; }
+        [Description("p_k/pk")]
         public float CrossoverProbability { get; set; }
+        [Description("p_m/pm")]
         public float MutationProbability { get; set; }
+        [Description("T/t")]
         public int Generations { get; set; }
         public bool IsElite { get; set; }
 
@@ -30,6 +38,12 @@ namespace GeneticAlgorithm_App
             IsElite = isElite;
         }
 
+        /// <summary>
+        /// Gets the precision as a number of decimal places based on the precision indicator.
+        /// </summary>
+        /// <param name="d">The precision indicator.</param>
+        /// <returns>The number of decimal places corresponding to the precision indicator.</returns>
+        /// <exception cref="InvalidDataException"></exception>
         public static int GetPrecInNumber(float d)
         {
             return d switch
