@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -37,27 +39,28 @@ namespace GeneticAlgorithm_App
             this.chbIsElite.Checked = true;
         }
 
-        public static int GetPrecInNumber(float d)
-        {
-            return d switch
-            {
-                0.1f => 1,
-                0.01f => 2,
-                0.001f => 3,
-                0.0001f => 4,
-                _ => throw new InvalidDataException()
-            };
-        }
+        public int LowerBound => int.Parse(txtLowerBound.Text);
+        public int UpperBound => int.Parse(txtUpperBound.Text);
+        public int PopulationSize => int.Parse(txtPopulationSize.Text);
+        public float PrecisionIndicator => float.Parse(cbxPrecision.SelectedItem.ToString());
+        public float CrossoverProbability => float.Parse(txtCrossoverProbability.Text);
+        public float MutationProbability => float.Parse(txtMutationProbability.Text);
+        public int Generations => int.Parse(txtNoGenerations.Text);
+        public bool IsElite => chbIsElite.Checked;
 
-        public void AssignInputValues(out int a, out int b, out int n, out float d, out float p_k, out float p_m, out int T)
+        private GeneticAlgorithmParams GetCurrentAlgorithmParams()
         {
-            int.TryParse(txtLowerBound.Text, out a);
-            int.TryParse(txtUpperBound.Text, out b);
-            int.TryParse(txtPopulationSize.Text, out n);
-            float.TryParse(cbxPrecision.SelectedItem.ToString(), out d);
-            float.TryParse(txtCrossoverProbability.Text, out p_k);
-            float.TryParse(txtMutationProbability.Text, out p_m);
-            int.TryParse(txtNoGenerations.Text, out T);
+            return new GeneticAlgorithmParams
+            {
+                LowerBound = this.LowerBound,
+                UpperBound = this.UpperBound,
+                PopulationSize = this.PopulationSize,
+                PrecisionIndicator = this.PrecisionIndicator,
+                CrossoverProbability = this.CrossoverProbability,
+                MutationProbability = this.MutationProbability,
+                Generations = this.Generations,
+                IsElite = this.IsElite
+            };
         }
 
         private (double minFxVal, double maxFxVal, double avgFxVal, double[] lastXreals, int maxIndex, double EliteXreal) ProcessGeneration(
@@ -115,9 +118,16 @@ namespace GeneticAlgorithm_App
             return (min, max, avg, finalXRealArray, maxIndex, finalXRealArray[maxIndex]);
         }
 
-        private (double[], double[], double[], double[]) RunGeneticAlgorithm(int a, int b, int l, int n, int T, float d, float p_k, float p_m, int prec, double[] lastXreals, double[] minFxByGeneration, double[] maxFxByGeneration, double[] avgFxByGeneration)
+        private (double[], double[], double[], double[]) RunGeneticAlgorithm(GeneticAlgorithmParams settings, int l, int prec, double[] lastXreals, double[] minFxByGeneration, double[] maxFxByGeneration, double[] avgFxByGeneration)
         {
-            bool isElite = chbIsElite.Checked;
+            bool isElite = settings.IsElite;
+            int T = settings.Generations;
+            int n = settings.PopulationSize;
+            float d = settings.PrecisionIndicator;
+            float p_k = settings.CrossoverProbability;
+            float p_m = settings.MutationProbability;
+            int a = settings.LowerBound;
+            int b = settings.UpperBound;
 
             for (int counter = 0; counter < T; counter++)
             {
@@ -138,19 +148,20 @@ namespace GeneticAlgorithm_App
 
             this.dgvStatistics.Rows.Clear();
 
-            int a, b, l, n, T;
-            float d, p_k, p_m;
+            var settings = GetCurrentAlgorithmParams();
 
-            AssignInputValues(out a, out b, out n, out d, out p_k, out p_m, out T);
+            int prec = GeneticAlgorithmParams.GetPrecInNumber(settings.PrecisionIndicator);
+            int l = Generation.GetLValue(settings.LowerBound, settings.UpperBound, settings.PrecisionIndicator);
 
-            int prec = GetPrecInNumber(d);
-            l = Generation.GetLValue(a, b, d);
-
+            int n = settings.PopulationSize;
+            int T = settings.Generations;
+            int a = settings.LowerBound;
+            int b = settings.UpperBound;
             #endregion
 
             double[] lastXreals = new double[n];
             double[] minFxByGeneration = new double[T], maxFxByGeneration = new double[T], avgFxByGeneration = new double[T];
-            (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration) = RunGeneticAlgorithm(a, b, l, n, T, d, p_k, p_m, prec, lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
+            (lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration) = RunGeneticAlgorithm(settings, l, prec, lastXreals, minFxByGeneration, maxFxByGeneration, avgFxByGeneration);
 
             chart.Series.Clear();
 
@@ -198,12 +209,14 @@ namespace GeneticAlgorithm_App
 
             ConcurrentBag<(int, double, double, int, double)> testResults = new ConcurrentBag<(int, double, double, int, double)>();
 
-            int a, b, l;
-            float d;
-            AssignInputValues(out a, out b, out _, out d, out _, out _, out _);
-            int prec = GetPrecInNumber(d);
-            l = Generation.GetLValue(a, b, d);
-            bool isElite = chbIsElite.Checked;
+            var _settings = GetCurrentAlgorithmParams();
+
+            int a = _settings.LowerBound;
+            int b = _settings.UpperBound;
+            float d = _settings.PrecisionIndicator;
+            int prec = GeneticAlgorithmParams.GetPrecInNumber(d);
+            int l = Generation.GetLValue(a, b, d);
+            bool isElite = _settings.IsElite;
 
             var totalCases = nLoop.Count * pkLoop.Count * pmLoop.Count * tLoop.Count;
             var processedCases = 0;

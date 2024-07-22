@@ -317,7 +317,7 @@ namespace GeneticAlgorithm_App
 
             for (int i = 0; i < n; ++i)
             {
-                finalXRealArray[i] = Math.Round(ConversionHelper.XIntToXReal(a, b, ConversionHelper.XBinToXInt(postCrossingCopy[i]), l, d), GeneticAlgorithmForm.GetPrecInNumber(d));
+                finalXRealArray[i] = Math.Round(ConversionHelper.XIntToXReal(a, b, ConversionHelper.XBinToXInt(postCrossingCopy[i]), l, d), GeneticAlgorithmParams.GetPrecInNumber(d));
                 //dataGridView1[14, i].Value = finalXRealArray[i];
 
                 finalFxValuesArray[i] = CountFxValue(finalXRealArray[i]);
@@ -328,7 +328,7 @@ namespace GeneticAlgorithm_App
         }
 
         public double[] HandleFinalXreals(int a, int b, int n, int l, string[] postCrossingCopy, float d) =>
-            postCrossingCopy.Select(xbin => Math.Round(ConversionHelper.XIntToXReal(a, b, ConversionHelper.XBinToXInt(xbin), l, d), GeneticAlgorithmForm.GetPrecInNumber(d))).ToArray();
+            postCrossingCopy.Select(xbin => Math.Round(ConversionHelper.XIntToXReal(a, b, ConversionHelper.XBinToXInt(xbin), l, d), GeneticAlgorithmParams.GetPrecInNumber(d))).ToArray();
 
         public double[] HandleFinalFxValues(int n, ReadOnlySpan<double> finalXreals)
         {
