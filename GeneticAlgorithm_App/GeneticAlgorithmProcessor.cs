@@ -16,7 +16,7 @@ namespace GeneticAlgorithm_App
             // Early Steps
             double[] xrealArray = lastXreals == null
                 ? gen.FillFirstTwoColumnsAndXrealArray(a, b, n, prec)
-                : gen.FillFirstTwoColumnsAndXrealArray(a, b, n, prec, lastXreals);
+                : gen.FillFirstTwoColumnsAndXrealArray(prec, lastXreals);
 
             double[] fxValuesArray = gen.FillFxColumnAndFxValuesArray(xrealArray);
 

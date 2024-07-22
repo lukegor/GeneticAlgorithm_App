@@ -25,7 +25,7 @@ namespace GeneticAlgorithm_App
         public double[] FillFirstTwoColumnsAndXrealArray(int a, int b, int n, int prec) =>
             FillArray(n, _ => RandomNumberHelper.GetRandomNumberWithPrecision(a, b, prec));
 
-        public double[] FillFirstTwoColumnsAndXrealArray(int a, int b, int n, int prec, double[] lastXreals) =>
+        public double[] FillFirstTwoColumnsAndXrealArray(int prec, double[] lastXreals) =>
             lastXreals.Select(x => Math.Round(x, prec)).ToArray();
 
         public double[] FillFxColumnAndFxValuesArray(double[] xrealArray) =>

@@ -32,9 +32,9 @@ namespace GeneticAlgorithm_App
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             dgvStatistics = new DataGridView();
             lp = new DataGridViewTextBoxColumn();
             x_real = new DataGridViewTextBoxColumn();
@@ -86,15 +86,15 @@ namespace GeneticAlgorithm_App
             Column11 = new DataGridViewTextBoxColumn();
             btnSimulation = new Button();
             mainTab = new TabControl();
-            tabPage1 = new TabPage();
-            tabPage2 = new TabPage();
+            tabPageChart = new TabPage();
+            tabPageStatistics = new TabPage();
             ((System.ComponentModel.ISupportInitialize)dgvStatistics).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvShares).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvSimulationTopResults).BeginInit();
             mainTab.SuspendLayout();
-            tabPage1.SuspendLayout();
-            tabPage2.SuspendLayout();
+            tabPageChart.SuspendLayout();
+            tabPageStatistics.SuspendLayout();
             SuspendLayout();
             // 
             // dgvStatistics
@@ -342,16 +342,16 @@ namespace GeneticAlgorithm_App
             // 
             // chart
             // 
-            chartArea.Name = "ChartArea1";
-            chart.ChartAreas.Add(chartArea);
-            legend.Name = "Legend1";
-            chart.Legends.Add(legend);
+            chartArea1.Name = "ChartArea1";
+            chart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            chart.Legends.Add(legend1);
             chart.Location = new Point(0, 10);
             chart.Name = "chart";
-            series.ChartArea = "ChartArea1";
-            series.Legend = "Legend1";
-            series.Name = "Series1";
-            chart.Series.Add(series);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            chart.Series.Add(series1);
             chart.Size = new Size(1652, 316);
             chart.TabIndex = 21;
             chart.Text = "chart";
@@ -444,35 +444,35 @@ namespace GeneticAlgorithm_App
             // 
             // mainTab
             // 
-            mainTab.Controls.Add(tabPage1);
-            mainTab.Controls.Add(tabPage2);
+            mainTab.Controls.Add(tabPageChart);
+            mainTab.Controls.Add(tabPageStatistics);
             mainTab.Location = new Point(12, 67);
             mainTab.Name = "mainTab";
             mainTab.SelectedIndex = 0;
             mainTab.Size = new Size(1666, 360);
             mainTab.TabIndex = 25;
             // 
-            // tabPage1
+            // tabPageChart
             // 
-            tabPage1.Controls.Add(dgvStatistics);
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(1658, 332);
-            tabPage1.TabIndex = 1;
-            tabPage1.Text = "Statistics";
-            tabPage1.UseVisualStyleBackColor = true;
+            tabPageChart.Controls.Add(chart);
+            tabPageChart.Location = new Point(4, 24);
+            tabPageChart.Name = "tabPageChart";
+            tabPageChart.Padding = new Padding(3);
+            tabPageChart.Size = new Size(1658, 332);
+            tabPageChart.TabIndex = 2;
+            tabPageChart.Text = "Generational Chart";
+            tabPageChart.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabPageStatistics
             // 
-            tabPage2.Controls.Add(chart);
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1658, 332);
-            tabPage2.TabIndex = 2;
-            tabPage2.Text = "Generational Chart";
-            tabPage2.UseVisualStyleBackColor = true;
+            tabPageStatistics.Controls.Add(dgvStatistics);
+            tabPageStatistics.Location = new Point(4, 24);
+            tabPageStatistics.Name = "tabPageStatistics";
+            tabPageStatistics.Padding = new Padding(3);
+            tabPageStatistics.Size = new Size(1658, 332);
+            tabPageStatistics.TabIndex = 1;
+            tabPageStatistics.Text = "Statistics (1st generation cycle)";
+            tabPageStatistics.UseVisualStyleBackColor = true;
             // 
             // GeneticAlgorithmForm
             // 
@@ -508,8 +508,8 @@ namespace GeneticAlgorithm_App
             ((System.ComponentModel.ISupportInitialize)dgvShares).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvSimulationTopResults).EndInit();
             mainTab.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
-            tabPage2.ResumeLayout(false);
+            tabPageChart.ResumeLayout(false);
+            tabPageStatistics.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -566,8 +566,8 @@ namespace GeneticAlgorithm_App
         private DataGridViewTextBoxColumn Column10;
         private DataGridViewTextBoxColumn Column11;
         private TabControl mainTab;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
+        private TabPage tabPageStatistics;
+        private TabPage tabPageChart;
         private Button btnSimulation;
     }
 }
